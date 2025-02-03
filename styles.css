@@ -69,7 +69,7 @@ button {
   font-size: 1.125rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 100%; /* Botões ocupam toda a largura disponível */
+  width: 100%;
 }
 
 button:disabled {
