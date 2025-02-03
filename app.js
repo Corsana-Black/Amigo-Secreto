@@ -1,5 +1,6 @@
 let amigos = [];
 let sorteados = {};
+let amigosSorteados = [];
 
 function adicionarAmigo() {
   let nome = document.getElementById("nome").value.trim();
@@ -35,7 +36,6 @@ function atualizarLista() {
   let lista = document.getElementById("listaAmigos");
   lista.innerHTML = "";
   amigos.forEach((amigo, index) => {
-    console.log(amigos);
     let li = document.createElement("li");
     li.textContent = `${index + 1}. ${amigo}`;
     lista.appendChild(li);
@@ -48,11 +48,13 @@ function sortearAmigo() {
     return;
   }
 
+  document.getElementById("resultado").innerText = "";
+  sorteados = {};
+  amigosSorteados = [];
+
   document.getElementById("numero").disabled = false;
   document.getElementById("sortear").disabled = true;
   document.getElementById("novoSorteioBtn").disabled = false;
-
-  sorteados = {}; // Limpa o histórico de sorteios para um novo jogo
 }
 
 function mostrarSorteado() {
@@ -63,8 +65,21 @@ function mostrarSorteado() {
     return;
   }
 
-  if (!sorteados[numero]) {
-    sorteados[numero] = amigos[Math.floor(Math.random() * amigos.length)];
+  if (!sorteados[numero] && amigos.length > 0) {
+    let availableAmigos = amigos.filter(
+      (amigo) => !amigosSorteados.includes(amigo)
+    );
+
+    if (availableAmigos.length === 0) {
+      alert("Todos os amigos já foram sorteados!");
+      return;
+    }
+
+    let index = Math.floor(Math.random() * availableAmigos.length);
+    sorteados[numero] = availableAmigos[index];
+    amigosSorteados.push(availableAmigos[index]);
+
+    atualizarLista();
   }
 
   document.getElementById(
@@ -83,10 +98,10 @@ function limparSorteio() {
   document.getElementById("novoSorteioBtn").disabled = true;
 
   amigos = [];
-  sorteados = {}; // Limpa o histórico de sorteios
+  sorteados = {};
+  amigosSorteados = [];
 }
 
-// Evento para acionar "Enter" nos inputs
 document.getElementById("nome").addEventListener("keypress", function (event) {
   if (event.key === "Enter") {
     adicionarAmigo();
